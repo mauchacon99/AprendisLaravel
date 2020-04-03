@@ -17,7 +17,31 @@ class UserController extends Controller
      function index()
     {
       //$users = DB::table('users')->get();
-      $users = User::orderByDesc('created_at')->simplePaginate();
+          /* $users = User::query()
+            ->when(request('team'), function ($query, $team) {
+                if ($team === 'with_team') {
+                    $query->has('team');
+                } elseif ($team === 'without_team') {
+                    $query->doesntHave('team');
+                }
+            })
+            ->when(request('search'), function ($query, $search) {
+                
+                $query->where(function ($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%")
+                          ->orWhere('email', 'like', "%{$search}%");
+                         
+                });
+            })
+            ->orderByDesc('created_at')
+            ->paginate();*/
+
+            $users = User::query()
+            ->with('team','profile.profession','skills')
+            ->byState(request('state'))
+            ->search(request('search'))
+            ->orderByDesc('created_at')
+            ->paginate(); 
 
       $title = 'Lista de Usuarios';
       /* return view('users')

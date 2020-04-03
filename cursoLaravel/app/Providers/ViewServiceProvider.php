@@ -15,16 +15,21 @@ class ViewServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-         View::composer(['users._fields'], function($view){
+         View::composer(['users._fields', 'users.index'], function($view){
 
             $skills      = Skill::OrderBy('name','ASC')->get();
             $professions = Profession::OrderBy('title','ASC')->get();
             $roles       = trans('users.roles');
-
+            $team        = trans('users.team');
+            $active      = trans('users.active');
+            
             $view->with([
-               'skills'      => $skills,
-               'professions' => $professions,
-               'roles'       => $roles
+               'skills'       => $skills,
+               'professions'  => $professions,
+               'team'         => $team,
+               'roles'        => $roles,
+               'checkedSkills'=> collect(request('skill')),
+               'active'       => $active
             ]);
         });
     }

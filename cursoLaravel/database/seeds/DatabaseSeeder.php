@@ -13,14 +13,20 @@ class DatabaseSeeder extends Seeder
     {
         $this->TrucanteTable([
             'professions',
+            'user_profiles',
+            'user_skill',
             'skills',
-            'users'
+            'users',
+            'teams'
+            
         ]);
         // $this->call(UsersTableSeeder::class);
         $this->call([
-            ProfessionSeeder::class,
-            UserSeeder::class,
             SkillSeeder::class,
+            ProfessionSeeder::class,
+            TeamSeeder::class,
+            UserSeeder::class,
+
         ]);
  
 

@@ -47,17 +47,17 @@ class User extends Authenticatable
        return $this->belongsToMany(Skill::class , 'user_skill');
     }
 
-    public function profession()
-    {
-        return $this->belongsTo(Profession::class);
-         
-    }
-
+   
     public function Profile(){
         
         return $this->hasOne(UserProfile::class)->withDefault([
             'bio' => 'Programador'
         ]);
+    }
+
+    public function Team()
+    {
+        return $this->belongsTo(Team::class)->withDefault();
     }
 
     public function profession_user(){
@@ -73,6 +73,32 @@ class User extends Authenticatable
         }else{
 
             return  $profession = $this->profession_id;
+        }
+    }
+
+    public function scopeSearch($query, $search){
+
+        if(empty($search) || request('team')){
+            return;
+        }
+
+        $query->where('name', 'like', "%{$search}%")
+            ->orWhere('email', 'like', "%{$search}%")
+            ->orWhereHas('team', function ($query) use ($search) {
+
+                $query->where('name', 'like', "%{$search}%");
+            });
+    }
+
+    public function scopeByState($query, $state)
+    {
+        if($state =='active'){
+
+            return $query->where('active',true);
+        }
+        if($state == 'inactive'){
+
+           return  $query->where('active',false);
         }
     }
 }

@@ -1,21 +1,23 @@
 	
 	 {{ csrf_field() }}
 
+   
+
 	<label for="name"> Nombre</label>
-    <input type="text" name="name" id="name" value="{{ old('name', $user->name) }}">
+    <input type="text" name="name" class="form-control"id="name" value="{{ old('name', $user->name) }}">
 
     <br>
     <label for="email">Email</label>
-    <input type="email" name="email" id="email" value="{{ old('email', $user->email)}}">
+    <input type="email" class="form-control" name="email" id="email" value="{{ old('email', $user->email)}}">
 
     <br>
     <label for="password">Contraseña</label>
-    <input type="password" name="password" id="password">
+    <input type="password"class="form-control"  name="password" id="password">
 
     <br>
 
     <label for="profession"> Profession </label>
-    <select name="profession_id"  id="profession_id">
+    <select name="profession_id" class="form-control"  id="profession_id">
           <option value=""> Seleciona una Profesion</option>
           @foreach($professions as $profession)
               <option value="{{ $profession->id }}"{{ old('profession_id', $user->profile->profession_id) == $profession->id ? ' selected' : ''}}> {{ $profession->title }}</option>
@@ -24,13 +26,13 @@
     <br>
   
       <label for="other_profession">Otra Profesion</label>
-    <input type="other_profession" name="other_profession" id="other_profession" 
+    <input type="other_profession" class="form-control" name="other_profession" id="other_profession" 
     value="{{ old('other_profession')}}">
       <br>
  
   
     <label for="twitter"> twitter</label>
-    <input type="text" name="twitter" value="{{ old('twitter', $user->profile->twitter)}}" id="twitter" >
+    <input type="text" class="form-control" name="twitter" value="{{ old('twitter', $user->profile->twitter)}}" id="twitter" >
    <br>
        <label for="bio"> Biografia</label>
     <textarea name="bio" class="form-control" id="bio"> {{ old('bio', $user->profile->bio) }}</textarea>
@@ -50,7 +52,7 @@
         <label class="form-check-label" for="skill_{{ $skill->id }}"> {{ $skill->name }}</label>
       </div>
     @endforeach
-    <br>
+    
     <h5> Rol</h5>
     @foreach($roles as $role => $name)
       <div class="form-check form-check-inline">

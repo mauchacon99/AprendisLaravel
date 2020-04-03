@@ -14,6 +14,7 @@ class SkillSeeder extends Seeder
     public function run()
     {
         factory(Skill::class)->create(['name' => 'JS' ]);
+        
         factory(Skill::class)->create(['name' => 'PHP'
         ]);
         factory(Skill::class)->create(['name' => 'SQL'

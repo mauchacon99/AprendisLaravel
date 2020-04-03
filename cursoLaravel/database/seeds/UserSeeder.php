@@ -2,6 +2,8 @@
 use App\Models\User;
 use App\Models\Profession;
 use App\Models\UserProfile;
+use App\Models\Skill;
+use App\Models\Team;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -33,29 +35,58 @@ class UserSeeder extends Seeder
             'profession_id' => $professionId
         ]);*/
 
-        $professionId = Profession::where('title','Desarrollador Web')->value('id');
-        
-        $user = factory(user::class)->create([
-            'email' =>'mauchacon99@gmail.com',
+        $this->fetchRelations();
+
+        $this->createUserAdmin();
+
+        foreach (range(0,995) as   $value) {
+
+            $this->createUserRandom();
+        }
+
+    }
+
+    public function fetchRelations()
+    {
+        $this->professions = Profession::all();
+        $this->skills      = Skill::all();
+        $this->teams       = Team::all();
+    }
+
+    public function createUserAdmin()
+    {
+        $admin = factory(user::class)->create([
+            'team_id'  => $this->teams->firstWhere('name','styden')->id,
+            'name'     => 'Mauricio Chacon',
+            'email'    =>'mauchacon99@gmail.com',
             'password' => bcrypt('12346789'),
-            'role'   => 'admin',
+            'role'     => 'admin',
+            'active'   => true,
             ]
         );
 
-        $user->profile()->create([
-            'bio' => 'Profesor, programador, periodista', 
-            'profession_id' => $professionId
+        $admin->Skills()->attach($this->skills);
+
+        $admin->profile()->create([
+            'bio'           => 'Profesor, programador, periodista', 
+            'profession_id' => $this->professions->firstWhere('title', 'Desarrollador back-end')->id,
+        ]);
+    }
+
+    public function createUserRandom()
+    {
+        $user = factory(User::class)->create([
+            'team_id'  => rand(0,2) ? $this->teams->random()->id : null ,
+            'active'   => rand(0,3) ? true : false ,
         ]);
 
+        $user->Skills()->attach($this->skills->random(rand(0,7)));
 
+        factory(UserProfile::class)->create([
+           'user_id'        => $user->id,
+           'profession_id'  => rand(0,2) ? $this->professions->random()->id : null ,
+        ]);
 
-        factory(User::class, 1000)->create()->each(function ($user) {
-            $user->profile()->create(
-                factory(\App\Models\UserProfile::class)->raw()
-            );
-        });
-        
-        
     }
 
 }
